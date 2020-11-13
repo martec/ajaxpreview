@@ -1,4 +1,4 @@
-# phpBB Breizh Ajax Preview Extension
+# Breizh Ajax Preview Extension
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Sylver35/ajaxpreview/badges/quality-score.png?b=1.4.0)](https://scrutinizer-ci.com/g/Sylver35/ajaxpreview/?branch=1.4.0)
 [![Build Status](https://scrutinizer-ci.com/g/Sylver35/ajaxpreview/badges/build.png?b=1.4.0)](https://scrutinizer-ci.com/g/Sylver35/ajaxpreview/build-status/1.4.0)
