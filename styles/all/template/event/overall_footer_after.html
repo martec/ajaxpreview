@@ -1,0 +1,72 @@
+{% if S_SHOW_AJAX_PREVIEW %}
+<script>
+var preview = {
+	timer:	false,
+	temps:	{{ REFRESH_TIME }},
+	url:	'{{ U_PREVIEW_AJAX }}',
+	prev:	'{{ lang("PREVIEW")|escape("js") }}{{ lang("COLON")|escape("js") }} ',
+	data:	'{{ PREVIEW_DATA }}',
+	sign:	{% if S_IN_SIGNATURE %}true{% else %}false{% endif %},
+};
+/** Start the preview on first focus **/
+function startPreview(){
+	preview.runAjax();
+	if(preview.timer === false){
+		preview.timer = setInterval(preview.runAjax, preview.temps);
+	}
+}
+(function($){  // Avoid conflicts with other libraries
+	'use strict';
+
+	/** Modify the Dom **/
+	if(preview.sign){
+		$('div.signature').first().attr('id', 'ajax-preview');
+	}else{
+		$('#preview').addClass('panel');
+		$('div.postbody > h3').first().attr('id', 'h3-subject');
+		$('div.content').first().attr('id', 'ajax-preview');
+		$('#ajax-preview').css({'overflow':'hidden auto', 'max-height':'260px'});
+		$('#message').on('scroll', function(){
+			$('#ajax-preview').scrollTop($(this).scrollTop());
+		});
+		$('#ajax-preview').on('scroll', function(){
+			$('#message').scrollTop($(this).scrollTop());
+		});
+	}
+
+	/** Recover the items of the onfocus **/
+	var onFocus = $('#'+preview.data).attr('onfocus');
+	/** And add them to the new item **/
+	$('#'+preview.data).attr('onfocus', onFocus+'startPreview();');
+	/** Run and Refresh the preview  **/
+	preview.runAjax = function(){
+		if($('#'+preview.data).val() !== ''){
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: preview.url,
+				data: 'content='+encodeURIComponent($('#'+preview.data).val()),
+				async: true,
+				success: function(update){
+					$('#ajax-preview').html(update.content);
+					if(!preview.sign && $('#subject').length){
+						if($('#subject').val() !== ''){
+							$('#h3-subject').html(preview.prev+$('#subject').val());
+						}
+					}
+				},
+				error: function(){
+					clearInterval(preview.timer);
+					preview.timer = setInterval(preview.runAjax, preview.temps);
+				}
+			});
+		}else{
+			$('#ajax-preview').html('');
+			if($('#subject').val() === ''){
+				$('#h3-subject').html('');
+			}
+		}
+	};
+})(jQuery);
+</script>
+{% endif %}

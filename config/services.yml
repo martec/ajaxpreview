@@ -1,0 +1,15 @@
+services:
+    sylver35.ajaxpreview.listener:
+        class: sylver35\ajaxpreview\event\listener
+        arguments:
+            - '@template'
+            - '@controller.helper'
+            - '@language'
+            - '@config'
+        tags:
+            - { name: event.listener }
+
+    sylver35.ajaxpreview.controller.ajax:
+        class: sylver35\ajaxpreview\controller\ajax
+        arguments:
+            - '@request'

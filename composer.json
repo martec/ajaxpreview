@@ -1,0 +1,40 @@
+{
+    "name": "sylver35/ajaxpreview",
+    "type": "phpbb-extension",
+    "description": "This extension allows you to preview messages, private messages and edit signatures in real time (ajax) directly in the editorial page",
+    "homepage": "https://breizhcode.com",
+    "version": "1.4.0",
+    "time": "2020-11-13",
+    "keywords": [
+        "phpbb",
+        "extension",
+        "preview",
+        "ajax",
+        "message",
+        "private message",
+        "signature"
+    ],
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "sylver35",
+            "homepage": "https://breizhcode.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.3",
+        "phpbb/phpbb": ">=3.3.1"
+    },
+    "extra": {
+        "display-name": "Breizh Ajax Preview",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.3.1"
+        },
+        "version-check": {
+            "host": "versions.breizhcode.com",
+            "directory": "/ajaxpreview",
+            "filename": "/version_check.json"
+        }
+    }
+}
