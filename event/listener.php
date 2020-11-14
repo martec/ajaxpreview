@@ -106,54 +106,38 @@ class listener implements EventSubscriberInterface
 	 */
 	public function acp_board_config_edit_add($event)
 	{
-		$before = [];
-		$add_vars = [];
+		$mode = $event['mode'];
+		if (in_array($mode, ['post', 'message', 'signature']))
+		{
+			$lang = ($mode === 'signature') ? 'AJAX_PREVIEW_SIGN' : 'AJAX_PREVIEW';
+			$id = [
+				'post'		=> [
+					'id'		=> 'ajaxpreview_refresh',
+					'before'	=> 'edit_time',
+				],
+				'message'	=> [
+					'id'		=> 'ajaxpreview_refresh_pm',
+					'before'	=> 'pm_edit_time',
+				],
+				'signature'	=> [
+					'id'		=> 'ajaxpreview_refresh_sign',
+					'before'	=> 'max_sig_chars',
+				],
+			];
 
-		if ($event['mode'] === 'post')
-		{
-			$add_vars = [
-				'ajaxpreview_refresh'	=> [
-					'lang'		=> 'AJAX_PREVIEW',
+			$add_vars[$mode] = [
+				$id[$mode]['id'] => [
+					'lang'		=> $lang,
+					'explain'	=> $lang . '_EXPLAIN',
 					'validate'	=> 'int:1:99',
 					'type'		=> 'number:1:99',
-					'explain'	=> 'AJAX_PREVIEW_EXPLAIN',
 					'append'	=> ' ' . $this->language->lang('SECONDS'),
 				],
 			];
-			$before = ['before' => 'edit_time'];
-		}
-		else if ($event['mode'] === 'message')
-		{
-			$add_vars = [
-				'ajaxpreview_refresh_pm'	=> [
-					'lang'		=> 'AJAX_PREVIEW',
-					'validate'	=> 'int:1:99',
-					'type'		=> 'number:1:99',
-					'explain'	=> 'AJAX_PREVIEW_EXPLAIN',
-					'append'	=> ' ' . $this->language->lang('SECONDS'),
-				],
-			];
-			$before = ['before' => 'pm_edit_time'];
-		}
-		else if ($event['mode'] === 'signature')
-		{
-			$add_vars = [
-				'ajaxpreview_refresh_sign'	=> [
-					'lang'		=> 'AJAX_PREVIEW_SIGN',
-					'validate'	=> 'int:1:99',
-					'type'		=> 'number:1:99',
-					'explain'	=> 'AJAX_PREVIEW_SIGN_EXPLAIN',
-					'append'	=> ' ' . $this->language->lang('SECONDS'),
-				],
-			];
-			$before = ['before' => 'max_sig_chars'];
-		}
 
-		if (!empty($add_vars))
-		{
 			$this->language->add_lang('ajaxpreview', 'sylver35/ajaxpreview');
 			$display_vars = $event['display_vars'];
-			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $add_vars, $before);
+			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $add_vars[$mode], ['before' => $id[$mode]['before']]);
 			$event['display_vars'] = $display_vars;
 		}
 	}
