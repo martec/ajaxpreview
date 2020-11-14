@@ -109,8 +109,9 @@ class listener implements EventSubscriberInterface
 		$mode = $event['mode'];
 		if (in_array($mode, ['post', 'message', 'signature']))
 		{
+			$add_vars = [];
 			$lang = ($mode === 'signature') ? 'AJAX_PREVIEW_SIGN' : 'AJAX_PREVIEW';
-			$id = [
+			$data = [
 				'post'		=> [
 					'id'		=> 'ajaxpreview_refresh',
 					'before'	=> 'edit_time',
@@ -126,7 +127,7 @@ class listener implements EventSubscriberInterface
 			];
 
 			$add_vars[$mode] = [
-				$id[$mode]['id'] => [
+				$data[$mode]['id'] => [
 					'lang'		=> $lang,
 					'explain'	=> $lang . '_EXPLAIN',
 					'validate'	=> 'int:1:99',
@@ -137,7 +138,7 @@ class listener implements EventSubscriberInterface
 
 			$this->language->add_lang('ajaxpreview', 'sylver35/ajaxpreview');
 			$display_vars = $event['display_vars'];
-			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $add_vars[$mode], ['before' => $id[$mode]['before']]);
+			$display_vars['vars'] = phpbb_insert_config_array($display_vars['vars'], $add_vars[$mode], ['before' => $data[$mode]['before']]);
 			$event['display_vars'] = $display_vars;
 		}
 	}
